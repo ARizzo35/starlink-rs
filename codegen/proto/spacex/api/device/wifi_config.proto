@@ -60,6 +60,8 @@ message WifiConfig {
 	optional bool apply_dfs_enabled = 1058 [json_name="applyDfsEnabled"];
 	optional bool disable_mesh_onboarding = 52 [json_name="disableMeshOnboarding"];
 	optional bool apply_disable_mesh_onboarding = 1067 [json_name="applyDisableMeshOnboarding"];
+	optional bool disable_wireless_mesh_onboarding = 1097 [json_name="disableWirelessMeshOnboarding"];
+	optional bool apply_disable_wireless_mesh_onboarding = 1098 [json_name="applyDisableWirelessMeshOnboarding"];
 	repeated .SpaceX.API.Device.WifiConfig.Network networks = 1100 [json_name="networks"];
 	optional bool apply_networks = 1101 [json_name="applyNetworks"];
 	optional uint64 incarnation = 43 [json_name="incarnation"];
@@ -120,6 +122,10 @@ message WifiConfig {
 	optional bool apply_wan_host_dscp_mark = 1093 [json_name="applyWanHostDscpMark"];
 	optional bool debug_pop_pings = 79 [json_name="debugPopPings"];
 	optional bool apply_debug_pop_pings = 1095 [json_name="applyDebugPopPings"];
+	optional bool client_tester = 80 [json_name="clientTester"];
+	optional bool apply_client_tester = 1096 [json_name="applyClientTester"];
+	optional uint32 asset_class = 81 [json_name="assetClass"];
+	optional bool apply_asset_class = 1099 [json_name="applyAssetClass"];
 	optional uint32 tag = 78 [json_name="tag"];
 	oneof wan_traffic_control {
 		.SpaceX.API.Device.NoTrafficControl wan_no_traffic_control = 4001 [json_name="wanNoTrafficControl"];
@@ -163,6 +169,8 @@ message Network {
 	optional bool guest = 1009 [json_name="guest"];
 	optional string landing = 1010 [json_name="landing"];
 	optional bool landing_page_v2 = 1017 [json_name="landingPageV2"];
+	optional bool client_authorization_required = 1018 [json_name="clientAuthorizationRequired"];
+	repeated string unauthorized_client_domain_allow_list = 1019 [json_name="unauthorizedClientDomainAllowList"];
 	optional bool internal = 1013 [json_name="internal"];
 	optional uint32 vlan = 1014 [json_name="vlan"];
 }

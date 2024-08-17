@@ -226,7 +226,7 @@ cargo run --example streaming
 
 ## Development
 
-Protobuf codegen is handled by the `codegen` crate in the workspace. Generated Protobuf files are checked in. To run the code generation, do:
+Protobuf and Rust codegen is handled by the `codegen` crate in the workspace. Generated Protobuf and Rust files are checked in. To run the code generation, do:
 
     cargo run --package starlink-codegen
 

@@ -2,28 +2,28 @@ pub mod proto {
     pub mod space_x {
         pub mod api {
             pub mod status {
-                tonic::include_proto!("space_x.api.status");
+                include!("space_x/space_x.api.status.rs");
             }
 
             pub mod device {
-                tonic::include_proto!("space_x.api.device");
+                include!("space_x/space_x.api.device.rs");
                 pub mod services {
                     pub mod unlock {
-                        tonic::include_proto!("space_x.api.device.services.unlock");
+                        include!("space_x/space_x.api.device.services.unlock.rs");
                     }
                 }
             }
 
             pub mod satellites {
                 pub mod network {
-                    tonic::include_proto!("space_x.api.satellites.network");
+                    include!("space_x/space_x.api.satellites.network.rs");
                 }
             }
 
             pub mod telemetron {
                 pub mod public {
                     pub mod common {
-                        tonic::include_proto!("space_x.api.telemetron.public.common");
+                        include!("space_x/space_x.api.telemetron.public.common.rs");
                     }
                 }
             }

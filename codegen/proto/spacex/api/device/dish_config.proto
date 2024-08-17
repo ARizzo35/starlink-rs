@@ -19,6 +19,8 @@ message DishConfig {
 	optional bool apply_power_save_mode = 6001 [json_name="applyPowerSaveMode"];
 	optional bool swupdate_three_day_deferral_enabled = 7 [json_name="swupdateThreeDayDeferralEnabled"];
 	optional bool apply_swupdate_three_day_deferral_enabled = 7001 [json_name="applySwupdateThreeDayDeferralEnabled"];
+	optional uint32 asset_class = 8 [json_name="assetClass"];
+	optional bool apply_asset_class = 8001 [json_name="applyAssetClass"];
 	enum SnowMeltMode {
 		AUTO = 0;
 		ALWAYS_ON = 1;

@@ -200,6 +200,10 @@ message WifiClient {
 	optional string domain = 22 [json_name="domain"];
 	optional string mac_address = 2 [json_name="macAddress"];
 	optional string ip_address = 3 [json_name="ipAddress"];
+	optional bool dhcp_lease_found = 49 [json_name="dhcpLeaseFound"];
+	optional bool dhcp_lease_active = 46 [json_name="dhcpLeaseActive"];
+	optional bool dhcp_lease_renewed = 47 [json_name="dhcpLeaseRenewed"];
+	optional float seconds_until_dhcp_lease_expires = 48 [json_name="secondsUntilDhcpLeaseExpires"];
 	repeated string ipv6_addresses = 41 [json_name="ipv6Addresses"];
 	optional float signal_strength = 4 [json_name="signalStrength"];
 	optional uint32 channel_width = 12 [json_name="channelWidth"];
@@ -234,6 +238,7 @@ message WifiClient {
 	optional uint32 api_version = 39 [json_name="apiVersion"];
 	optional .SpaceX.API.Device.WifiClient.PingMetrics ping_metrics = 40 [json_name="pingMetrics"];
 	optional bool blocked = 42 [json_name="blocked"];
+	optional bool authorized = 50 [json_name="authorized"];
 	optional uint32 client_id = 43 [json_name="clientId"];
 	optional .SpaceX.API.Device.WifiClient.FqcodelInfo fqcodel_info = 44 [json_name="fqcodelInfo"];
 message RxStats {
@@ -369,6 +374,8 @@ message WifiGetStatusResponse {
 	optional .SpaceX.API.Device.PoeStats poe_stats = 1022 [json_name="poeStats"];
 	optional string dish_id = 1023 [json_name="dishId"];
 	optional int64 utc_ns = 1024 [json_name="utcNs"];
+	optional .SpaceX.API.Device.WifiSoftwareUpdateStats software_update_stats = 1025 [json_name="softwareUpdateStats"];
+	optional .SpaceX.API.Device.WifiSetupRequirement setup_requirement = 1026 [json_name="setupRequirement"];
 }
 
 message WifiAuthenticateRequest {
@@ -701,6 +708,11 @@ message starlink_routers_hourly_metrics_v2 {
 	optional .google.protobuf.Int64Value wan_traffic_control_cake_drops = 1103 [json_name="wanTrafficControlCakeDrops"];
 	optional .google.protobuf.Int64Value wan_traffic_control_cake_ack_drops = 1104 [json_name="wanTrafficControlCakeAckDrops"];
 	optional .google.protobuf.UInt32Value conntrack_entries = 1100 [json_name="conntrackEntries"];
+	optional .google.protobuf.UInt32Value dhcp_secs_eq_0 = 1105 [json_name="dhcpSecsEq0"];
+	optional .google.protobuf.UInt32Value dhcp_secs_gt_0 = 1106 [json_name="dhcpSecsGt0"];
+	optional .google.protobuf.UInt32Value dhcp_secs_gt_10 = 1107 [json_name="dhcpSecsGt10"];
+	optional .google.protobuf.UInt32Value dhcp_secs_gt_30 = 1108 [json_name="dhcpSecsGt30"];
+	optional .google.protobuf.UInt32Value dhcp_secs_gt_60 = 1109 [json_name="dhcpSecsGt60"];
 }
 
 message starlink_router_alerts {
@@ -709,6 +721,8 @@ message starlink_router_alerts {
 	optional bool active = 3 [json_name="active"];
 	optional .SpaceX.API.Telemetron.Public.Common.TimestampInfo start = 4 [json_name="start"];
 	optional .SpaceX.API.Telemetron.Public.Common.TimestampInfo end = 5 [json_name="end"];
+	optional string hardware = 6 [json_name="hardware"];
+	optional string software = 7 [json_name="software"];
 }
 
 message starlink_router_client_speedtests {
@@ -750,8 +764,10 @@ message StarlinkRouterClients {
 	optional string router_id = 1 [json_name="routerId"];
 	optional .SpaceX.API.Telemetron.Public.Common.TimestampInfo timestamp = 2 [json_name="timestamp"];
 	optional uint32 client_id = 3 [json_name="clientId"];
+	optional string client_telem_index = 4 [json_name="clientTelemIndex"];
 	optional .google.protobuf.StringValue router_hw = 119 [json_name="routerHw"];
 	optional .google.protobuf.StringValue router_sw = 120 [json_name="routerSw"];
+	optional .google.protobuf.UInt32Value router_uptime_s = 137 [json_name="routerUptimeS"];
 	optional .google.protobuf.StringValue client_router_id = 121 [json_name="clientRouterId"];
 	optional .google.protobuf.StringValue client_hw = 122 [json_name="clientHw"];
 	optional .google.protobuf.StringValue client_sw = 123 [json_name="clientSw"];
@@ -779,6 +795,41 @@ message StarlinkRouterClients {
 	optional .google.protobuf.FloatValue ping_latency_last_1h = 116 [json_name="pingLatencyLast1h"];
 	optional .google.protobuf.StringValue steer_state = 117 [json_name="steerState"];
 	optional .google.protobuf.BoolValue blocked = 126 [json_name="blocked"];
+	optional .google.protobuf.BoolValue authorized = 136 [json_name="authorized"];
+	optional .google.protobuf.BoolValue has_dhcp_v4_lease = 130 [json_name="hasDhcpV4Lease"];
+	optional .google.protobuf.StringValue ipv4_address = 131 [json_name="ipv4Address"];
+	optional .google.protobuf.BoolValue has_hostname = 132 [json_name="hasHostname"];
+	optional .google.protobuf.BoolValue dhcp_v4_lease_is_active = 133 [json_name="dhcpV4LeaseIsActive"];
+	optional .google.protobuf.BoolValue dhcp_v4_lease_was_renewed = 134 [json_name="dhcpV4LeaseWasRenewed"];
+	optional .google.protobuf.FloatValue seconds_until_dhcp_v4_lease_expires = 135 [json_name="secondsUntilDhcpV4LeaseExpires"];
+}
+
+message StarlinkRouterClientTesterRun {
+	optional string client_tester_router_id = 1 [json_name="clientTesterRouterId"];
+	optional .SpaceX.API.Telemetron.Public.Common.TimestampInfo timestamp = 2 [json_name="timestamp"];
+	optional .google.protobuf.StringValue client_iface_name = 3 [json_name="clientIfaceName"];
+	optional .google.protobuf.StringValue target_ssid = 4 [json_name="targetSsid"];
+	optional .google.protobuf.BoolValue target_has_password = 5 [json_name="targetHasPassword"];
+	optional .google.protobuf.StringValue target_auth = 6 [json_name="targetAuth"];
+	optional .google.protobuf.StringValue target_encryption = 7 [json_name="targetEncryption"];
+	optional .google.protobuf.StringValue target_bssid = 8 [json_name="targetBssid"];
+	optional .google.protobuf.StringValue target_irtt_server = 25 [json_name="targetIrttServer"];
+	optional .google.protobuf.UInt32Value iteration = 9 [json_name="iteration"];
+	optional .google.protobuf.StringValue error_code = 10 [json_name="errorCode"];
+	optional .google.protobuf.FloatValue seconds_to_associate = 11 [json_name="secondsToAssociate"];
+	optional .google.protobuf.FloatValue seconds_to_lease = 12 [json_name="secondsToLease"];
+	optional .google.protobuf.FloatValue seconds_to_resolve_router = 13 [json_name="secondsToResolveRouter"];
+	optional .google.protobuf.FloatValue seconds_to_resolve_internet = 14 [json_name="secondsToResolveInternet"];
+	optional .google.protobuf.FloatValue seconds_to_ping_dish = 15 [json_name="secondsToPingDish"];
+	optional .google.protobuf.FloatValue v4_irtt_test_duration_s = 16 [json_name="v4IrttTestDurationS"];
+	optional .google.protobuf.FloatValue v4_irtt_rtt_latency_min_ms = 17 [json_name="v4IrttRttLatencyMinMs"];
+	optional .google.protobuf.FloatValue v4_irtt_rtt_latency_mean_ms = 18 [json_name="v4IrttRttLatencyMeanMs"];
+	optional .google.protobuf.FloatValue v4_irtt_rtt_latency_median_ms = 19 [json_name="v4IrttRttLatencyMedianMs"];
+	optional .google.protobuf.FloatValue v4_irtt_rtt_latency_max_ms = 20 [json_name="v4IrttRttLatencyMaxMs"];
+	optional .google.protobuf.FloatValue v4_irtt_rtt_latency_std_dev_ms = 21 [json_name="v4IrttRttLatencyStdDevMs"];
+	optional .google.protobuf.UInt32Value v4_irtt_pkts_sent = 22 [json_name="v4IrttPktsSent"];
+	optional .google.protobuf.UInt32Value v4_irtt_pkts_recv = 23 [json_name="v4IrttPktsRecv"];
+	optional .google.protobuf.FloatValue v4_irtt_loss_percent = 24 [json_name="v4IrttLossPercent"];
 }
 
 message WifiSetClientGivenNameRequest {

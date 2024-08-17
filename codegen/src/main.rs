@@ -8,7 +8,7 @@ use prost::Message;
 use prost_types::{DescriptorProto, FileDescriptorSet};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let file_descriptor_set_bytes = include_bytes!("../static/device.protoset");
+    let file_descriptor_set_bytes = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/static/device.protoset"));
     let file_descriptor_set = FileDescriptorSet::decode(&file_descriptor_set_bytes[..]).unwrap();
 
     dbg!(&file_descriptor_set);
@@ -16,10 +16,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for fd in file_descriptor_set.file {
         let name = fd.name.unwrap();
 
-        let dir = format!("./proto/{}", Path::new(&name).parent().unwrap().to_str().unwrap());
+        let dir = format!(
+            "{}/proto/{}",
+            env!("CARGO_MANIFEST_DIR"),
+            Path::new(&name).parent().unwrap().to_str().unwrap()
+        );
         fs::create_dir_all(dir)?;
 
-        let mut file = File::create(format!("./proto/{}", name))?;
+        let mut file = File::create(format!("{}/proto/{}", env!("CARGO_MANIFEST_DIR"), name))?;
 
         file.write_all(format!("syntax = \"{}\";\n\n", fd.syntax.unwrap()).as_bytes())?;
         file.write_all(format!("package {};\n\n", fd.package.unwrap()).as_bytes())?;
@@ -51,6 +55,43 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         file.flush()?;
     }
+
+    tonic_build::configure()
+        .build_server(false)
+        .out_dir(concat!(env!("CARGO_MANIFEST_DIR"), "/../src/space_x"))
+        .protoc_arg("--experimental_allow_proto3_optional")
+        .compile(
+            &[
+                concat!(
+                    env!("CARGO_MANIFEST_DIR"),
+                    "/proto/spacex/api/common/status/status.proto"
+                ),
+                concat!(env!("CARGO_MANIFEST_DIR"), "/proto/spacex/api/device/command.proto"),
+                concat!(env!("CARGO_MANIFEST_DIR"), "/proto/spacex/api/device/common.proto"),
+                concat!(env!("CARGO_MANIFEST_DIR"), "/proto/spacex/api/device/device.proto"),
+                concat!(env!("CARGO_MANIFEST_DIR"), "/proto/spacex/api/device/dish.proto"),
+                concat!(env!("CARGO_MANIFEST_DIR"), "/proto/spacex/api/device/dish_config.proto"),
+                concat!(env!("CARGO_MANIFEST_DIR"), "/proto/spacex/api/device/rssi_scan.proto"),
+                concat!(env!("CARGO_MANIFEST_DIR"), "/proto/spacex/api/device/service.proto"),
+                concat!(
+                    env!("CARGO_MANIFEST_DIR"),
+                    "/proto/spacex/api/device/services/unlock/service.proto"
+                ),
+                concat!(env!("CARGO_MANIFEST_DIR"), "/proto/spacex/api/device/transceiver.proto"),
+                concat!(env!("CARGO_MANIFEST_DIR"), "/proto/spacex/api/device/wifi.proto"),
+                concat!(env!("CARGO_MANIFEST_DIR"), "/proto/spacex/api/device/wifi_config.proto"),
+                concat!(env!("CARGO_MANIFEST_DIR"), "/proto/spacex/api/device/wifi_util.proto"),
+                concat!(
+                    env!("CARGO_MANIFEST_DIR"),
+                    "/proto/spacex/api/satellites/network/ut_disablement_codes.proto"
+                ),
+                concat!(
+                    env!("CARGO_MANIFEST_DIR"),
+                    "/proto/spacex/api/telemetron/public/common/time.proto"
+                ),
+            ],
+            &[concat!(env!("CARGO_MANIFEST_DIR"), "/proto/")],
+        )?;
 
     Ok(())
 }

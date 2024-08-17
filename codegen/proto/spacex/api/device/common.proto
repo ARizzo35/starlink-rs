@@ -46,6 +46,8 @@ message BootInfo {
 	optional int32 last_count = 3 [json_name="lastCount"];
 	optional bool crash_boot = 5 [json_name="crashBoot"];
 	optional int32 crash_boot_count = 6 [json_name="crashBootCount"];
+	optional string even_side_software_version = 7 [json_name="evenSideSoftwareVersion"];
+	optional string odd_side_software_version = 8 [json_name="oddSideSoftwareVersion"];
 message CountByReasonEntry {
 	optional int32 key = 1 [json_name="key"];
 	optional int32 value = 2 [json_name="value"];
@@ -190,5 +192,6 @@ enum BootReason {
 	MCU_BRINGUP_FAILED_FDIR = 11;
 	AVIATION_OUTAGE_FDIR = 12;
 	SOFTWARE_WATCHDOG = 13;
+	HARDWARE_WATCHDOG = 15;
 }
 

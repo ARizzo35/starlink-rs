@@ -25,9 +25,6 @@ tonic = "0.12.1"
 prost = "0.13.1"
 prost-types = "0.13.1"
 
-[build-dependencies]
-tonic-build = "0.12.1"
-
 [dev-dependencies]
 async-stream = "0.3.5"
 tokio = { version = "1.34.0", features = ["rt-multi-thread", "macros"] }

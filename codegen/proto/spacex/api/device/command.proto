@@ -38,5 +38,6 @@ enum User {
 	ROUTER = 5;
 	GUEST_LAN = 6;
 	SENSITIVE_COMMANDING = 7;
+	LAN_TLS = 8;
 }
 

@@ -79,6 +79,8 @@ message Request {
 		.SpaceX.API.Device.GetRadioStatsRequest get_radio_stats = 1036 [json_name="getRadioStats"];
 		.SpaceX.API.Device.GetTimeRequest time = 1037 [json_name="time"];
 		.SpaceX.API.Device.RunIperfServerRequest run_iperf_server = 1038 [json_name="runIperfServer"];
+		.SpaceX.API.Device.TcpConnectivityTestRequest tcp_connectivity_test = 1039 [json_name="tcpConnectivityTest"];
+		.SpaceX.API.Device.UdpConnectivityTestRequest udp_connectivity_test = 1040 [json_name="udpConnectivityTest"];
 		.SpaceX.API.Device.DishStowRequest dish_stow = 2002 [json_name="dishStow"];
 		.SpaceX.API.Device.StartDishSelfTestRequest start_dish_self_test = 2012 [json_name="startDishSelfTest"];
 		.SpaceX.API.Device.DishGetContextRequest dish_get_context = 2003 [json_name="dishGetContext"];
@@ -94,6 +96,8 @@ message Request {
 		.SpaceX.API.Device.DishSetMaxPowerTestModeRequest dish_set_max_power_test_mode = 2018 [json_name="dishSetMaxPowerTestMode"];
 		.SpaceX.API.Device.DishActivateRssiScanRequest dish_activate_rssi_scan = 2019 [json_name="dishActivateRssiScan"];
 		.SpaceX.API.Device.DishGetRssiScanResultRequest dish_get_rssi_scan_result = 2020 [json_name="dishGetRssiScanResult"];
+		.SpaceX.API.Device.DishFactoryResetRequest dish_factory_reset = 2021 [json_name="dishFactoryReset"];
+		.SpaceX.API.Device.ResetButtonRequest reset_button = 2022 [json_name="resetButton"];
 		.SpaceX.API.Device.WifiGetClientsRequest wifi_get_clients = 3002 [json_name="wifiGetClients"];
 		.SpaceX.API.Device.WifiGetPingMetricsRequest wifi_get_ping_metrics = 3007 [json_name="wifiGetPingMetrics"];
 		.SpaceX.API.Device.WifiSetConfigRequest wifi_set_config = 3001 [json_name="wifiSetConfig"];
@@ -115,6 +119,7 @@ message Request {
 		.SpaceX.API.Device.WifiStartLocalTelemProxyRequest wifi_start_local_telem_proxy = 3027 [json_name="wifiStartLocalTelemProxy"];
 		.SpaceX.API.Device.WifiBackhaulStatsRequest wifi_backhaul_stats = 3029 [json_name="wifiBackhaulStats"];
 		.SpaceX.API.Device.WifiToggleUmbilicalModeRequest wifi_toggle_umbilical_mode = 3030 [json_name="wifiToggleUmbilicalMode"];
+		.SpaceX.API.Device.WifiClientSandboxRequest wifi_client_sandbox = 3031 [json_name="wifiClientSandbox"];
 		.SpaceX.API.Device.TransceiverIFLoopbackTestRequest transceiver_if_loopback_test = 4001 [json_name="transceiverIfLoopbackTest"];
 		.SpaceX.API.Device.TransceiverGetStatusRequest transceiver_get_status = 4003 [json_name="transceiverGetStatus"];
 		.SpaceX.API.Device.TransceiverGetTelemetryRequest transceiver_get_telemetry = 4004 [json_name="transceiverGetTelemetry"];
@@ -173,6 +178,8 @@ message Response {
 		.SpaceX.API.Device.DishSetMaxPowerTestModeResponse dish_set_max_power_test_mode = 2018 [json_name="dishSetMaxPowerTestMode"];
 		.SpaceX.API.Device.DishActivateRssiScanResponse dish_activate_rssi_scan = 2019 [json_name="dishActivateRssiScan"];
 		.SpaceX.API.Device.DishGetRssiScanResultResponse dish_get_rssi_scan_result = 2020 [json_name="dishGetRssiScanResult"];
+		.SpaceX.API.Device.DishFactoryResetResponse dish_factory_reset = 2021 [json_name="dishFactoryReset"];
+		.SpaceX.API.Device.ResetButtonResponse reset_button = 2022 [json_name="resetButton"];
 		.SpaceX.API.Device.WifiAuthenticateResponse wifi_authenticate = 3005 [json_name="wifiAuthenticate"];
 		.SpaceX.API.Device.WifiGetClientsResponse wifi_get_clients = 3002 [json_name="wifiGetClients"];
 		.SpaceX.API.Device.WifiGetHistoryResponse wifi_get_history = 3006 [json_name="wifiGetHistory"];
@@ -191,6 +198,7 @@ message Response {
 		.SpaceX.API.Device.WifiGetFirewallResponse wifi_get_firewall = 3024 [json_name="wifiGetFirewall"];
 		.SpaceX.API.Device.WifiFactoryTestCommandResponse wifi_factory_test_command = 3025 [json_name="wifiFactoryTestCommand"];
 		.SpaceX.API.Device.WifiBackhaulStatsResponse wifi_backhaul_stats = 3026 [json_name="wifiBackhaulStats"];
+		.SpaceX.API.Device.WifiClientSandboxResponse wifi_client_sandbox = 3027 [json_name="wifiClientSandbox"];
 		.SpaceX.API.Device.TransceiverIFLoopbackTestResponse transceiver_if_loopback_test = 4001 [json_name="transceiverIfLoopbackTest"];
 		.SpaceX.API.Device.TransceiverGetStatusResponse transceiver_get_status = 4003 [json_name="transceiverGetStatus"];
 		.SpaceX.API.Device.TransceiverGetTelemetryResponse transceiver_get_telemetry = 4004 [json_name="transceiverGetTelemetry"];
@@ -207,6 +215,7 @@ message Event {
 		.SpaceX.API.Device.WifiAccountBondingEvent wifi_account_bonding = 3002 [json_name="wifiAccountBonding"];
 		.SpaceX.API.Device.WifiNewPeerEvent wifi_new_peer = 3003 [json_name="wifiNewPeer"];
 		.SpaceX.API.Device.WifiCloudStatusEvent wifi_cloud_status = 3004 [json_name="wifiCloudStatus"];
+		.SpaceX.API.Device.WifiClientSandboxRequest wifi_client_sandbox = 3005 [json_name="wifiClientSandbox"];
 	}
 }
 
@@ -215,6 +224,20 @@ message WifiCloudStatusEvent {
 	optional bool direct_link_to_dish = 1 [json_name="directLinkToDish"];
 	optional string hardware_version = 2 [json_name="hardwareVersion"];
 	optional bool is_bypassed = 3 [json_name="isBypassed"];
+}
+
+message WifiClientSandboxRequest {
+	repeated .SpaceX.API.Device.WifiClientSandboxStatus client_sandbox_status = 1 [json_name="clientSandboxStatus"];
+	repeated .SpaceX.API.Device.WifiClientSandboxAlert alerts = 2 [json_name="alerts"];
+}
+
+message WifiClientSandboxResponse {
+}
+
+message WifiClientSandboxStatus {
+	optional string client = 1 [json_name="client"];
+	optional uint32 sandbox = 2 [json_name="sandbox"];
+	optional bool sandboxed = 3 [json_name="sandboxed"];
 }
 
 message EnableDebugTelemRequest {
@@ -261,6 +284,8 @@ message Logs {
 	optional string dmesg = 2 [json_name="dmesg"];
 	optional string kernel_panic = 3 [json_name="kernelPanic"];
 	optional string mtk_eth_procs = 4 [json_name="mtkEthProcs"];
+	optional string debug_netsys_0sec = 5 [json_name="debugNetsys0sec"];
+	optional string debug_netsys_2sec = 6 [json_name="debugNetsys2sec"];
 }
 
 }
@@ -653,7 +678,50 @@ message Location {
 		INVALID_COUNTRY = 5;
 		BLOCKED_COUNTRY = 6;
 		DATA_OVERAGE_SANDBOX_POLICY = 7;
+		CELL_IS_DISABLED = 8;
+		UNLICENSED_COUNTRY = 9;
 	}
+}
+
+message TcpConnectivityTestRequest {
+	optional string target = 1 [json_name="target"];
+	optional uint32 port = 2 [json_name="port"];
+}
+
+message UdpConnectivityTestRequest {
+	optional string target = 1 [json_name="target"];
+	optional uint32 port = 2 [json_name="port"];
+	optional .SpaceX.API.Device.UdpConnectivityTestRequest.UDPProbeDataType probe_data = 3 [json_name="probeData"];
+	enum UDPProbeDataType {
+		EMPTY = 0;
+		DNS_STATUS_REQUEST = 1;
+		DTLS_CLIENT_HELLO = 2;
+		DNS_VERSION_BIND_REQ = 3;
+		RPC_CHECK = 4;
+		DNS_SD = 5;
+		SNMP_V1_PUBLIC = 6;
+		SNMP_V3_GET_REQUEST = 7;
+		NTP_MESSAGE = 8;
+		XDMCP = 9;
+		KERBEROS = 10;
+		SIP_OPTIONS = 11;
+		LDAP_SEARCH_REQ = 12;
+		MEMCACHED_STATS = 13;
+		OPENVPN = 14;
+		CIFS_NS_UC = 15;
+		TFTP_GET = 16;
+		DHCP_INFORM = 17;
+		QUIC = 18;
+		RIPV1 = 19;
+		NFS_PROC_NULL = 20;
+		COAP_REQUEST = 21;
+	}
+}
+
+enum WifiClientSandboxAlert {
+	LANDING_PAGE_DOWN = 0;
+	SANDBOX_API_DOWN_GROUND = 1;
+	SANDBOX_API_DOWN_STARLINK = 2;
 }
 
 enum PositionSource {

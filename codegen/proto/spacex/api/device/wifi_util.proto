@@ -58,6 +58,17 @@ message PoeStats {
 	optional uint32 poe_faults_undervoltage = 6 [json_name="poeFaultsUndervoltage"];
 }
 
+message WifiSoftwareUpdateStats {
+	optional .SpaceX.API.Device.WifiSoftwareUpdateState state = 1 [json_name="state"];
+	optional float software_download_progress = 2 [json_name="softwareDownloadProgress"];
+	optional float seconds_since_get_target_versions = 3 [json_name="secondsSinceGetTargetVersions"];
+}
+
+message WifiSetupRequirement {
+	optional .SpaceX.API.Device.WifiSetupRequirementState state = 1 [json_name="state"];
+	optional uint64 pause_countdown_seconds = 2 [json_name="pauseCountdownSeconds"];
+}
+
 enum IfaceType {
 	IFACE_TYPE_UNKNOWN = 0;
 	IFACE_TYPE_ETH = 1;
@@ -123,5 +134,28 @@ enum Protocol {
 	UDP = 1;
 	TLS = 2;
 	DTLS = 3;
+}
+
+enum WifiSoftwareUpdateState {
+	NOT_RUN = 0;
+	GETTING_TARGET_VERSION = 1;
+	DOWNLOADING_UPDATE_IMAGE = 2;
+	FLASHING = 3;
+	NO_UPDATE_REQUIRED = 4;
+	REBOOT_PENDING = 5;
+	GETTING_TARGET_VERSION_FAILED = 6;
+	GETTING_TARGET_VERSION_EXHAUSTED = 7;
+	NO_VALID_ARTIFACT = 8;
+	ILLEGAL_ARTIFACT = 9;
+	DOWNLOADING_UPDATE_IMAGE_FAILED = 10;
+	DOWNLOADING_UPDATE_IMAGE_EXHAUSTED = 11;
+	FLASHING_FAILED = 12;
+}
+
+enum WifiSetupRequirementState {
+	NOT_REQUIRED = 0;
+	REQUIRED_COUNTDOWN = 1;
+	REQUIRED_PAUSED = 2;
+	REQUIRED_COMPLETE = 3;
 }
 
